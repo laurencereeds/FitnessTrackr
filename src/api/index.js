@@ -85,6 +85,7 @@ export async function fetchRoutinesByUser(username) {
         })
         const responseObj = await response.json();
         console.log('responseObjfetchRoutinesByUser', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -92,10 +93,13 @@ export async function fetchRoutinesByUser(username) {
 
 export async function fetchActivities() {
     try{
-        const response = await fetch(`${API_URL}/api/activities`)
-        const data = await response.json();
-        console.log('data', data)
-
+        const response = await fetch(`${API_URL}/api/activities`, {
+            method: 'GET',
+            headers: makeHeaders()
+        })
+        const responseObj = await response.json();
+        console.log('responseObjActivities', responseObj)
+        return responseObj
     } catch(error) {
       console.error(error)
     }
@@ -157,6 +161,7 @@ export async function fetchRoutines() {
         })
         const responseObj = await response.json();
         console.log('responseObjRoutines', responseObj)
+        return responseObj
     } catch(error) {
         console.error(error)
     }

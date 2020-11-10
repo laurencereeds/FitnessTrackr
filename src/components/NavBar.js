@@ -1,61 +1,76 @@
 import React, {useEffect} from 'react';
 import { NavLink } from 'react-router-dom';
-import { getToken } from '../api';
+import { getToken, setToken } from '../api';
 
-const NavBar = () => {
-    // const isLoggedIn = false;
+const NavBar = (props) => {
+    const {token, setToken} = props;
 
-    // useEffect(() => {
-    //     const token = getToken();
-    //     if(token){
-    //         isLoggedIn = true;
-    //     }               
-    // });
+    useEffect(() => {
+        const token = getToken();
+        if(token){
+            setToken(token) ;
+        }               
+    });
 
     return (
-//         {isLoggedIn ? 
-// <div>
-// <nav className="navbar navbar-expand-lg navbar-light bg-light">
-//   <a className="navbar-brand" href="#">Fitness Trackr</a>
-//   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-//     <span className="navbar-toggler-icon"></span>
-//   </button>
-//   <div className="collapse navbar-collapse" id="navbarNav">
-//     <ul className="navbar-nav">
-//       <li className="nav-item active">
-//         <a className="nav-link" href="/home">Home <span className="sr-only">(current)</span></a>
-//       </li>
-//       <li className="nav-item">
-//         <a className="nav-link" href="/logout">Logout</a>
-//       </li>
+        <div>
+        {token ? 
+            <div>
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                    <a className="navbar-brand" href="#">Fitness Trackr</a>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav">
+                            <li className="nav-item active">
+                                <a className="nav-link" href="/home">Home <span className="sr-only">(current)</span></a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/routines">Routines</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/myroutines">My Routines</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/activities">Activities</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/logout">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+ : 
+            <div>
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                    <a className="navbar-brand" href="#">Fitness Trackr</a>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav">
+                            <li className="nav-item active">
+                                <a className="nav-link" href="/home">Home <span className="sr-only">(current)</span></a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/routines">Routines</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/activities">Activities</a>
+                            </li>
+                        </ul>
 
-//     </ul>
-//   </div>
-// </nav>
-// </div>
-//  : 
-<div>
-<nav className="navbar navbar-expand-lg navbar-light bg-light">
-  <a className="navbar-brand" href="#">Fitness Trackr</a>
-  <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span className="navbar-toggler-icon"></span>
-  </button>
-  <div className="collapse navbar-collapse" id="navbarNav">
-    <ul className="navbar-nav">
-      <li className="nav-item active">
-        <a className="nav-link" href="/home">Home <span className="sr-only">(current)</span></a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href="/login">Login</a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href="/register">Register</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-</div> 
-// }
+                        <div className="justify-content-end">
+                            <a className="btn btn-light my-2 my-sm-0" href="/login">Login</a>
+                            <a className="btn btn-light my-2 my-sm-0" href="/register">Register</a> 
+                        </div>
+                    </div>
+                </nav>
+            </div>
+}
+        </div> 
 
     )
 };

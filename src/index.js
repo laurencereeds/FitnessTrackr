@@ -10,10 +10,16 @@ import  NavBar from './components/NavBar';
 import Home from './components/Home'; 
 import Login from './components/Login';
 import Register from './components/Register';
+import Routines from './components/Routines';
+import Activities from './components/Activities';
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const App = () => {
+  const [routines, setRoutines] = useState([])
+  const [myRoutines, setMyRoutines] = useState([])
+  const [activities, setActivities] = useState([])
+  const [token, setToken] = useState('')
   // register('poildecarotte1', 'testing01')
   // login('poildecarotte1', 'testing01') 
   // fetchActivities()
@@ -30,9 +36,12 @@ const App = () => {
   // deleteRoutineActivity()
   return (
     <div id="App">
-      <NavBar />
+      <NavBar token={token} setToken={setToken}/>
       <Switch>
       <Route exact path="/">
+        <Home />
+      </Route>
+      <Route exact path="/home">
         <Home />
       </Route>
       <Route exact path="/login">
@@ -40,7 +49,17 @@ const App = () => {
       </Route>
       <Route exact path="/register">
         <Register />
+      </Route>      
+      <Route exact path="/routines">
+        <Routines routines={routines} setRoutines={setRoutines} />
       </Route>
+      <Route exact path="/myroutines">
+        <Routines myRoutines={myRoutines} setMyRoutines={setMyRoutines} />
+      </Route>
+      <Route exact path="/activities">
+        <Activities activities={activities} setActivities={setActivities} />
+      </Route>
+
     </Switch>
     </div>
   );
