@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 export const API_URL = 'http://fitnesstrac-kr.herokuapp.com';
 
@@ -67,11 +68,13 @@ export async function login(username, password) {
 
 export async function fetchUserData() {
     try {
-        const response = await fetch(`${API_URL}/users/me`, {
-            header: makeHeaders(),
+        const response = await fetch(`${API_URL}/api/users/me`, {
+            method: "GET",
+            headers: makeHeaders()
         })
         const responseObj = await response.json();
         console.log('responseObjUserData', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -117,6 +120,7 @@ export async function createActivity(name, description) {
         })
         const responseObj = await response.json();
         console.log('responseObjCreateActivity', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -139,15 +143,16 @@ export async function editActivity(activityId, name, description) {
     }
 }
 
-export async function fetchRoutineActivities(activityId) {
-    console.log('activityId', activityId)
+export async function fetchRoutineActivities(routineId) {
+    console.log('routineId', routineId)
     try {
-        const response = await fetch(`${API_URL}/api/activities/${activityId}/routines`, {
+        const response = await fetch(`${API_URL}/api/activities/${routineId}/routines`, {
             method: 'GET',
             headers: makeHeaders()
         })
         const responseObj = await response.json();
         console.log('responseObjRoutineActivities', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -258,6 +263,7 @@ export async function deleteRoutineActivity(routineActivityId) {
         })
         const responseObj = await response.json();
         console.log('responseObjDeleteRoutineActivity', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }

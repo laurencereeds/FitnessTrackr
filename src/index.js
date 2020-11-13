@@ -6,20 +6,21 @@ import { fetchActivities, register, login, createActivity, fetchRoutinesByUser,
          editActivity, fetchRoutineActivities, fetchRoutines, createRoutine, 
          editRoutine, deleteRoutine, createRoutineActivity, editRoutineActivity, deleteRoutineActivity } from './api';
 
-import  NavBar from './components/NavBar';  
+import NavBar from './components/NavBar';  
 import Home from './components/Home'; 
 import Login from './components/Login';
 import Register from './components/Register';
 import Routines from './components/Routines';
 import Activities from './components/Activities';
+import MyRoutines from './components/MyRoutines';
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const App = () => {
-  const [routines, setRoutines] = useState([])
   const [myRoutines, setMyRoutines] = useState([])
-  const [activities, setActivities] = useState([])
+  const [myInfo, setMyInfo] = useState([]);
   const [token, setToken] = useState('')
+  const [activities, setActivities] = useState('')
   // register('poildecarotte1', 'testing01')
   // login('poildecarotte1', 'testing01') 
   // fetchActivities()
@@ -51,13 +52,13 @@ const App = () => {
         <Register />
       </Route>      
       <Route exact path="/routines">
-        <Routines routines={routines} setRoutines={setRoutines} />
+        <Routines />
       </Route>
-      <Route exact path="/myroutines">
-        <Routines myRoutines={myRoutines} setMyRoutines={setMyRoutines} />
+      <Route exact path="/myroutines" myInfo={myInfo} setMyInfo={setMyInfo}>
+        <MyRoutines  />
       </Route>
       <Route exact path="/activities">
-        <Activities activities={activities} setActivities={setActivities} />
+        <Activities token={token} setToken={setToken} activities={activities} setActivities={setActivities} />
       </Route>
 
     </Switch>

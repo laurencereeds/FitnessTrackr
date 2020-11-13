@@ -5,7 +5,7 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = async (event) => {
+    const handleRegister = async (event) => {
         try {
             event.preventDefault();
             console.log('username', username);
@@ -15,6 +15,7 @@ const Register = () => {
                 setToken(result.token);
                 if (result.user && result.user.username) {
                     setUsername(result.user.username);
+                    location.href = "/home/"
                 }
             } else {
                 console.error('Nope')
@@ -27,7 +28,7 @@ const Register = () => {
 }
     return (
   <div>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleRegister}>
           <div className="form-group">
             <label>Username</label>
             <input type="text" value={username} onChange={(e) => {setUsername(e.target.value)}} /> 

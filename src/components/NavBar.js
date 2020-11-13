@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { NavLink } from 'react-router-dom';
 import { getToken, setToken } from '../api';
+import Logout from './Logout';
 
 const NavBar = (props) => {
     const {token, setToken} = props;
+    const [username, setUsername] = useState({});
 
     useEffect(() => {
         const token = getToken();
@@ -36,7 +38,10 @@ const NavBar = (props) => {
                                 <a className="nav-link" href="/activities">Activities</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/logout">Logout</a>
+                                <a>Hi </a>
+                            </li>
+                            <li className="nav-item">
+                                <button className="btn btn-primary" onClick={Logout}>Logout</button>
                             </li>
                         </ul>
                     </div>

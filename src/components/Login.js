@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import swal from 'sweetalert';
 import { login, setToken } from '../api';
 
 const Login = () => {
@@ -16,10 +17,20 @@ const Login = () => {
                 console.log('test');
                 if (result.user && result.user.username) {
                     setUsername(result.user.username);
+                    location.href = "/home/";
+                    swal({
+                        title: "Success",
+                        text: "You are now logged in!",
+                        icon: "success",
+                      });
                 }
             } else {
-                console.error('Nope')
-                //use of swal here
+                swal({
+                    title: "Oh la la!",
+                    text: "Username or password is incorrect",
+                    icon: "error",
+                    button: "Try again",
+                  });
             }
 
             } catch(error) {

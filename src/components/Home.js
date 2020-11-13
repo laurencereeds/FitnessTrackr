@@ -8,6 +8,9 @@ const Home = () => {
             <h1>Fitness Trackr</h1>
             <p>A performance tracking app</p>
           </div>
+          <div>
+
+          </div>
         </div>
       );
     }
