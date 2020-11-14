@@ -1,18 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import { NavLink } from 'react-router-dom';
-import { getToken, setToken } from '../api';
+import { getToken, setToken, fetchUserData } from '../api';
 import Logout from './Logout';
 
 const NavBar = (props) => {
-    const {token, setToken} = props;
+    const {token, setToken, userData, setUserData} = props;
     const [username, setUsername] = useState({});
+
+    // const userFetchUserData = async () => {
+    //         fetchUserData().then(response => setUserData(response)).catch(error => console.log(error))
+    //         // setUserData(userData)
+    //         console.log('userData', userData);
+    // }
 
     useEffect(() => {
         const token = getToken();
         if(token){
             setToken(token) ;
-        }               
-    });
+        } 
+        fetchUserData().then(setUserData)
+        console.log('userData',userData)
+    }, []);
 
     return (
         <div>
@@ -38,7 +46,7 @@ const NavBar = (props) => {
                                 <a className="nav-link" href="/activities">Activities</a>
                             </li>
                             <li className="nav-item">
-                                <a>Hi </a>
+                            <a className="navbar-brand" href="#">Hi {userData.username}</a>
                             </li>
                             <li className="nav-item">
                                 <button className="btn btn-primary" onClick={Logout}>Logout</button>

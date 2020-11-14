@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
-import {fetchRoutinesByUser, fetchUserData, createRoutine, deleteRoutine, createRoutineActivity} from '../api';
+import {fetchRoutinesByUser, fetchUserData, createRoutine, deleteRoutine, createRoutineActivity, editRoutine} from '../api';
 
 const MyRoutines = (props) => {
-    // const {activities, setActivities, myInfo, setMyInfo} = props;
+    const { userData, setUserData, allActivities, setAllActivities } = props;
     const [myRoutines, setMyRoutines] = useState([]);
-    const [myInfo, setMyInfo] = useState([]);
     const [isActive, setIsActive] = useState(false)
+    const [isEditActive, setEditIsActive] = useState(false)
     const [name, setName]= useState('');
     const [goal, setGoal]= useState('');
     const [isPublic, setIsPublic]= useState(false);
@@ -17,19 +18,28 @@ const MyRoutines = (props) => {
     const [count, setCount] = useState('');
     const [duration, setDuration] = useState('');
     const [dropDown, setDropDownIsActive] = useState(false);
-    
-    console.log('myInfo', myInfo)
+    const [isDropdownOpen,setDropdown] = useState(false);
+
+    console.log('userDataMyRoutines', userData.username)
 
     let history = useHistory();
     // const [myInfo, setMyInfo] = useState({});
 
-    const handleSetUp = async () => {
-        try {
-             const myRoutines = await fetchUserData(setMyInfo).then(myInfo => fetchRoutinesByUser(myInfo.username))
+    // const handleSetUp = async () => {
+    //     try {
+            //  fetchUserData(setMyInfo).then(data => fetchRoutinesByUser(data.username))
             //  console.log('myRoutines', myRoutines)
+            // fetchUserData().then(setMyInfo)
+            // console.log('myInfo', myInfo)
+            // fetchRoutinesByUser(userData.username).then(setMyRoutines)
+            // console.log('myRoutines', myRoutines)
+            // fetchRoutinesByUser(userData.username).then(setMyRoutines);
+            // fetchRoutinesByUser(userData.username).then(response => setMyRoutines(response)).catch(error => console.log(error))
+            // console.log('myRoutines', myRoutines);
+
 
             //  const userInfo = await fetchUserData(setMyInfo)
-            //  setMyInfo(userInfo)
+            //  setMyInfo(myInfo)
             //  console.log('myInfo.username', myInfo)
             //  const data = await fetchRoutinesByUser(myInfo.username).then(setMyRoutines)
             // const userRoutines = fetchRoutinesByUser(userInfo.username).then(response => setMyRoutines(response)).catch(error => console.log(error))
@@ -38,10 +48,10 @@ const MyRoutines = (props) => {
             // console.log('routines', myRoutines);  
 
             // console.log('result', data) 
-        } catch(error) {
-            console.error(error)
-        }
-    }
+    //     } catch(error) {
+    //         console.error(error)
+    //     }
+    // }
 
     const handleCreateRoutine = async () => {
         let array = []
@@ -77,7 +87,7 @@ const MyRoutines = (props) => {
 
     }
 
-    const handleDelete = async (routineId) => {
+    const handleDeleteRoutine = async (routineId) => {
         try {
             const result = await deleteRoutine(routineId)
             // console.log('myRoutines.id', myRoutines.id)
@@ -87,6 +97,25 @@ const MyRoutines = (props) => {
             console.error(error)
         }
     }
+
+    const handledeleteRoutineActivity = async (routineActivityId) => {
+        try {
+
+        } catch(error) {
+            console.error(error)
+        }
+    }
+
+    const handleEditRoutine = async (routineId, name, goal) => {
+        try {
+            const result = await editRoutine(routineId, name, goal)
+            console.log('result', result)
+
+        } catch(error) {
+            console.error(error)
+        }
+    }
+
     const handleCreateActivity = async () => {
         let array = []
         // let history = useHistory();
@@ -128,32 +157,34 @@ const MyRoutines = (props) => {
 
 
     useEffect( () => {
-    handleSetUp()
+    // fetchRoutinesByUser(userData.username).then(response => setMyRoutines(response)).catch(error => console.log(error))
+    fetchRoutinesByUser('petitpied').then(setMyRoutines)
+    console.log('myRoutines', myRoutines)
     },[])
 
     return (<>
 
-    <button type="button" className="btn btn-primary btn-lg btn-block" onClick={setIsActive}>Create Routine</button>
+    <button type="button" className="btn btn-primary btn-lg btn-block" onClick={ setIsActive}>Create Routine</button>
 
     { isActive ? 
         <form className="activityForm">
             <div className="form-group">
             <label >Name</label>
-            <input type="email" className="form-control" value={name} onChange={(e) => {setName(e.target.value)}}></input>
+            <input type="text" className="form-control" value={name} onChange={(e) => {setName(e.target.value)}}></input>
             </div>
             <div className="form-group">
             <label >Description</label>
-            <input type="email" className="form-control" value={goal} onChange={(e) => {setGoal(e.target.value)}}></input>
+            <input type="text" className="form-control" value={goal} onChange={(e) => {setGoal(e.target.value)}}></input>
             </div>
             <div className="form-check">
-                <input class="form-check-input" type="checkbox" value={isPublic} onChange={(e) => {setIsPublic(e.target.value)}}></input>
-                <label class="form-check-label" for="defaultCheck1">
+                <input className="form-check-input" type="checkbox" value={isPublic} onClick={() => setIsPublic(true)}></input>
+                <label className="form-check-label" for="defaultCheck1">
                     Is Public
                 </label>
             </div>
 
             <div>
-            <button type="submit" className="btn btn-primary" onClick={handleCreateRoutine}>Submit</button>
+            <button type="submit" className="btn btn-primary" onClick={ handleCreateRoutine}>Submit</button>
             </div>
         </form>
          : " "
@@ -170,10 +201,33 @@ const MyRoutines = (props) => {
                             <p className="card-text">{goal}</p>
                             <p className="card-text">By: {creatorName}</p>
                             <p className="card-text">{isPublic}</p>
-                            <p className="card-text">Activities:</p>
-                            <a href="#" className="btn btn-danger">Delete</a>
-                            <a href="#" className="btn btn-secondary">Edit</a>
-                            <button type="button" className="btn btn-primary" onClick={setActivityIsActive(true)}>Add Activity</button>
+                            <p className="card-text">Activities:{activities}</p>
+                            <div>
+                            <a href="#" className="btn btn-danger" onClick={() => handleDeleteRoutine(id)} >Delete</a>
+                            </div>
+                            <div>
+                            <a href="#" className="btn btn-secondary" onClick={setEditIsActive}>Edit</a>
+                            </div>
+                            { isEditActive ? 
+                                    <form className="activityForm">
+                                    <div className="form-group">
+                                    <label >Name</label>
+                                    <input type="text" className="form-control" value={name} onChange={(e) => {setName(e.target.value)}}>{name}</input>
+                                    </div>
+                                    <div className="form-group">
+                                    <label >Description</label>
+                                    <input type="text" className="form-control" value={goal} onChange={(e) => {setGoal(e.target.value)}}>{goal}</input>
+                                    </div>
+                                    <div className="form-check">
+                                    </div>
+                                    <div>
+                                    <button type="submit" className="btn btn-primary" onClick={ handleCreateRoutine}>Submit</button>
+                                    </div>
+                                </form>
+                            : '' }
+                            <div>
+                            <button type="button" className="btn btn-primary" onClick={() => setActivityIsActive(true)}>Add Activity</button>
+                            </div>
                         
                             { activities.map(({id, routineActivityId, name, description, count, duration}) => {
               return<div key={routineActivityId} className="card">
@@ -183,36 +237,50 @@ const MyRoutines = (props) => {
                         <p className="card-text">{description}</p>
                         <p className="card-text">Count: {count}</p>
                         <p className="card-text">Duration: {duration} min</p>
-                        <a href="#" className="btn btn-danger">Delete</a>
+                        <a href="#" className="btn btn-danger" onClick={() => handledeleteRoutineActivity(id)}>Delete</a>
                     </div>
                 </div>
           })}
               { activityIsActive ? 
         <form className="activityForm">
-        <div class="btn-group">
-  <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div className="btn-group">
+  {/* <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Available Activities
   </button>
-  {dropDown ? 
-    // <div className="dropdown-menu show" >
+  {dropDown ?  */}
+    {/* // <div className="dropdown-menu show" >
     // <a className="dropdown-item" href="#">Action</a>
     // <a className="dropdown-item" href="#">Another action</a>
     // <a className="dropdown-item" href="#">Something else here</a>
     // <div className="dropdown-divider"></div>
     // <a className="dropdown-item" href="#">Separated link</a>
-    <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown button
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-  </div>
-</div>
-//   </div> 
-  : ''
-  }
+//     <div className="dropdown">
+//   <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={setDropdown(!isDropdownOpen)}>
+//     Dropdown button
+//   </button>
+//   <div className={classnames('dropdown-menu bg-dark dropdown-userdata', {'show': isDropdownOpen})}>
+//     <a className="dropdown-item" href="#">Action</a>
+//     <a className="dropdown-item" href="#">Another action</a>
+//     <a className="dropdown-item" href="#">Something else here</a>
+//   </div>
+// </div>
+//   </div>  */}
+{/* <Dropdown>
+  <Dropdown.Toggle variant="success" id="dropdown-basic">
+    Dropdown Button
+  </Dropdown.Toggle>
+{}
+  <Dropdown.Menu>{
+      allActivities.map(activity => (
+              <Dropdown.Item key={activity.id} value={activity.id}>{activity.name}
+              </Dropdown.Item>
+      ))}
+
+
+  </Dropdown.Menu>
+</Dropdown> */}
+  {/* : ''
+  } */}
   {/* {activities.map(({id, routineActivityId, name, description, count, duration}))} */}
 
 </div>
@@ -223,9 +291,14 @@ const MyRoutines = (props) => {
             <div className="form-group">
             <label >Description</label>
             <input type="email" className="form-control" value={activityDescription} onChange={(e) => {setActivityDescription(e.target.value)}}></input>
+            <label >Count</label>
             <input type="email" className="form-control" value={count} onChange={(e) => {setCount(e.target.value)}}></input>
+            <label >Duration</label>
             <input type="email" className="form-control" value={duration} onChange={(e) => {setDuration(e.target.value)}}></input>
-            <button type="submit" className="btn btn-primary" onClick={handleCreateActivity}>Submit</button>
+            <div>
+                <button type="submit" className="btn btn-primary" onClick={handleCreateActivity}>Submit</button>
+            </div>
+
             </div>
         </form>
          : " "

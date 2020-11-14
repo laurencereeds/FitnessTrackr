@@ -7,8 +7,8 @@ const Routines = () => {
 
     useEffect( () => {
         fetchRoutines().then(setRoutines)
-        console.log('routines', routines);
-        console.log('setRoutines', setRoutines);
+        // console.log('routines', routines);
+        // console.log('setRoutines', setRoutines);
     },[])
 
     // useEffect( () => {

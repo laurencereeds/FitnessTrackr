@@ -4,15 +4,17 @@ import swal from 'sweetalert';
 import {fetchActivities, setToken, getToken, createActivity} from '../api';
 
 const Activities = (props) => {
-    const { token, setToken, activities, setActivities} = props;
+    const { token, setToken} = props;
+    const [allActivities, setAllActivities] = useState([]);
     const [isActive, setIsActive] = useState(false)
     const [name, setName]= useState('');
     const [description, setDescription]= useState('');
     let history = useHistory();
 
     useEffect( () => {
-        fetchActivities().then(response => setActivities(response)).catch(error => console.log(error))
-        console.log('activities', activities);
+        // fetchActivities().then(response => setAllActivities(response)).catch(error => console.log(error))
+        fetchActivities().then(setAllActivities)
+        console.log('activities', allActivities);
         const token = getToken();
         if(token){
             setToken(token) ;
@@ -21,7 +23,6 @@ const Activities = (props) => {
     },[])
 
     const handleCreateActivity = async () => {
-        let array = []
         // let history = useHistory();
         try {
             // let history = useHistory();
@@ -32,15 +33,17 @@ const Activities = (props) => {
             // console.log('result.name', result.name)
             if (result.error) {
                 swal({
-                    title: "Good job!",
+                    title: "Oh no!",
                     text: "An activity with this name already exists",
-                    icon: "success",
+                    icon: "warning",
                     button: "Oh la la!",
                   });
             } else {
-            array.push(result)
+            allActivities.push(result)
             // let history = useHistory();
-            history.push("/activities");
+            // ('activityForm').hide()
+            // history.push("/activities");
+            // <myRoutines />
             swal({
                 title: "Success!",
                 text: "You created a new activity!",
@@ -57,7 +60,6 @@ const Activities = (props) => {
     return (<>
     { 
     token ?
-    // <div id="activities"><b style={{ fontSize: '3rem', marginLeft: "2rem"}}>Activities</b></div>
    <div>
     <button type="button" className="btn btn-primary btn-lg btn-block" onClick={setIsActive}>Create Activity</button>
     <div>
@@ -77,9 +79,9 @@ const Activities = (props) => {
     }
 
     </div>
-    <div id="activities"><b style={{ fontSize: '3rem', marginLeft: "2rem"}}>Activities</b></div>
+    <div id="allActivities"><b style={{ fontSize: '3rem', marginLeft: "2rem"}}>Activities</b></div>
 
-    {activities && activities.map(({id, name, description}) => 
+    {allActivities && allActivities.map(({id, name, description}) => 
     <div key={id}
     className="row">
     <div className="col-sm-6">
@@ -97,7 +99,7 @@ const Activities = (props) => {
 
     :
     
-    activities && activities.map(({id, name, description}) => 
+    allActivities && allActivities.map(({id, name, description}) => 
 <div className="container">
     <div key={id}
     className="row justify_content-center" style={{ marginBottom: '20px'}}>

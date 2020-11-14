@@ -17,10 +17,12 @@ import MyRoutines from './components/MyRoutines';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const App = () => {
-  const [myRoutines, setMyRoutines] = useState([])
-  const [myInfo, setMyInfo] = useState([]);
-  const [token, setToken] = useState('')
-  const [activities, setActivities] = useState('')
+  // const [myRoutines, setMyRoutines] = useState([])
+  // const [myInfo, setMyInfo] = useState([]);
+  const [token, setToken] = useState('');
+  // const [activities, setActivities] = useState('');
+  const [userData, setUserData] = useState([]);
+  const [allActivities, setAllActivities] = useState([]);
   // register('poildecarotte1', 'testing01')
   // login('poildecarotte1', 'testing01') 
   // fetchActivities()
@@ -37,7 +39,7 @@ const App = () => {
   // deleteRoutineActivity()
   return (
     <div id="App">
-      <NavBar token={token} setToken={setToken}/>
+      <NavBar token={token} setToken={setToken} userData={userData} setUserData={setUserData}/>
       <Switch>
       <Route exact path="/">
         <Home />
@@ -52,13 +54,13 @@ const App = () => {
         <Register />
       </Route>      
       <Route exact path="/routines">
-        <Routines />
+        <Routines  />
       </Route>
-      <Route exact path="/myroutines" myInfo={myInfo} setMyInfo={setMyInfo}>
-        <MyRoutines  />
+      <Route exact path="/myroutines">
+        <MyRoutines userData={userData} setUserData={setUserData} activities={allActivities} setActivities={setAllActivities}/>
       </Route>
       <Route exact path="/activities">
-        <Activities token={token} setToken={setToken} activities={activities} setActivities={setActivities} />
+        <Activities token={token} setToken={setToken} activities={allActivities} setActivities={setAllActivities} />
       </Route>
 
     </Switch>
