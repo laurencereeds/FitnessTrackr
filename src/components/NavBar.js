@@ -1,17 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import { NavLink } from 'react-router-dom';
-import { getToken, setToken, fetchUserData } from '../api';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { getToken, fetchUserData } from '../api';
 import Logout from './Logout';
 
 const NavBar = (props) => {
     const {token, setToken, userData, setUserData} = props;
-    const [username, setUsername] = useState({});
-
-    // const userFetchUserData = async () => {
-    //         fetchUserData().then(response => setUserData(response)).catch(error => console.log(error))
-    //         // setUserData(userData)
-    //         console.log('userData', userData);
-    // }
 
     useEffect(() => {
         const token = getToken();
@@ -19,7 +12,6 @@ const NavBar = (props) => {
             setToken(token) ;
         } 
         fetchUserData().then(setUserData)
-        console.log('userData',userData)
     }, []);
 
     return (
@@ -34,19 +26,19 @@ const NavBar = (props) => {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item active">
-                                <a className="nav-link" href="/home">Home <span className="sr-only">(current)</span></a>
+                                <a className="nav-link" >Home <span className="sr-only">(current)</span></a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/routines">Routines</a>
+                                <Link className="nav-link" to={"/routines"}>Routines</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/myroutines">My Routines</a>
+                                <Link className="nav-link" to={"/myroutines"}>My Routines</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/activities">Activities</a>
+                                <Link className="nav-link" to={"/activities"}>Activities</Link>
                             </li>
                             <li className="nav-item">
-                            <a className="navbar-brand" href="#">Hi {userData.username}</a>
+                            <a className="navbar-brand" >Hi {userData.username}</a>
                             </li>
                             <li className="nav-item">
                                 <button className="btn btn-primary" onClick={Logout}>Logout</button>

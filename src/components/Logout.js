@@ -1,5 +1,4 @@
 import React from 'react';
-import swal from 'sweetalert';
 import { setToken } from '../api';
 
 const Logout = () => {

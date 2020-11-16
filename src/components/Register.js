@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { register, setToken } from '../api';
 
 const Register = () => {
@@ -8,27 +8,33 @@ const Register = () => {
     const handleRegister = async (event) => {
         try {
             event.preventDefault();
-            console.log('username', username);
             const result = await register(username, password);
-            console.log('result', result);
             if (result) {
                 setToken(result.token);
                 if (result.user && result.user.username) {
                     setUsername(result.user.username);
                     location.href = "/home/"
+                    swal({
+                        title: "Success",
+                        text: "You successfully created an account!",
+                        icon: "success",
+                      });
                 }
             } else {
-                console.error('Nope')
-                //use of swal here
+                swal({
+                    title: "Oh la la!",
+                    text: "Please try again with a different username and password combinaison",
+                    icon: "error",
+                    button: "Try again",
+                  });
             }
-
             } catch(error) {
             console.error(error)
         } 
 }
     return (
-  <div>
-      <form onSubmit={handleRegister}>
+  <div className="form-signup">
+      <form id="cover" onSubmit={handleRegister}>
           <div className="form-group">
             <label>Username</label>
             <input type="text" value={username} onChange={(e) => {setUsername(e.target.value)}} /> 

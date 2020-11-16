@@ -1,86 +1,48 @@
 import React, {useEffect, useState} from 'react';
-import Dropdown from 'react-bootstrap/Dropdown';
 import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
-import {fetchRoutinesByUser, fetchUserData, createRoutine, deleteRoutine, createRoutineActivity, editRoutine} from '../api';
+import {fetchRoutinesByUser, createRoutine, deleteRoutine, createRoutineActivity, editRoutine, fetchActivities, deleteRoutineActivity, editRoutineActivity } from '../api';
 
 const MyRoutines = (props) => {
-    const { userData, setUserData, allActivities, setAllActivities } = props;
+    const {userData, allActivities, setAllActivities } = props;
     const [myRoutines, setMyRoutines] = useState([]);
-    const [isActive, setIsActive] = useState(false)
-    const [isEditActive, setEditIsActive] = useState(false)
+    const [isActive, setIsActive] = useState(false);
+    const [isEditActive, setEditIsActive] = useState(false);
+    const [activityIsActive, setActivityIsActive] = useState(false);
+    const [isPublic, setIsPublic]= useState(false);
+    const [updateRoutineActivity, setUpdateRoutineActivity] = useState(false);
     const [name, setName]= useState('');
     const [goal, setGoal]= useState('');
-    const [isPublic, setIsPublic]= useState(false);
-    const [activityIsActive, setActivityIsActive] = useState('');
-    const [activityName, setActivityName] = useState('');
-    const [activityDescription, setActivityDescription] = useState('');
     const [count, setCount] = useState('');
     const [duration, setDuration] = useState('');
-    const [dropDown, setDropDownIsActive] = useState(false);
-    const [isDropdownOpen,setDropdown] = useState(false);
+    const [routineId, setRoutineId] = useState('');
+    const [activityId, setActivityId] = useState('');
+    const [routineActivityId, setRoutineActivityId] = useState('');
+    const [routineActivityName, setRoutineActivityName] = useState('')
 
-    console.log('userDataMyRoutines', userData.username)
 
     let history = useHistory();
-    // const [myInfo, setMyInfo] = useState({});
-
-    // const handleSetUp = async () => {
-    //     try {
-            //  fetchUserData(setMyInfo).then(data => fetchRoutinesByUser(data.username))
-            //  console.log('myRoutines', myRoutines)
-            // fetchUserData().then(setMyInfo)
-            // console.log('myInfo', myInfo)
-            // fetchRoutinesByUser(userData.username).then(setMyRoutines)
-            // console.log('myRoutines', myRoutines)
-            // fetchRoutinesByUser(userData.username).then(setMyRoutines);
-            // fetchRoutinesByUser(userData.username).then(response => setMyRoutines(response)).catch(error => console.log(error))
-            // console.log('myRoutines', myRoutines);
-
-
-            //  const userInfo = await fetchUserData(setMyInfo)
-            //  setMyInfo(myInfo)
-            //  console.log('myInfo.username', myInfo)
-            //  const data = await fetchRoutinesByUser(myInfo.username).then(setMyRoutines)
-            // const userRoutines = fetchRoutinesByUser(userInfo.username).then(response => setMyRoutines(response)).catch(error => console.log(error))
-            // setMyRoutines(userRoutines)
-            // console.log('userRoutine', userRoutines)
-            // console.log('routines', myRoutines);  
-
-            // console.log('result', data) 
-    //     } catch(error) {
-    //         console.error(error)
-    //     }
-    // }
 
     const handleCreateRoutine = async () => {
-        let array = []
-        // let history = useHistory();
         try {
-            // let history = useHistory();
             event.preventDefault();
-            // console.log('activity.name', activities)
             const result = await createRoutine(name, goal, isPublic);
-            console.log('result', result);
-            // console.log('result.name', result.name)
             if (result.error) {
                 swal({
                     title: "Oh no!",
                     text: "A routine with this name already exists",
-                    icon: "success",
+                    icon: "'error'",
                     button: "Oh la la!",
                   });
             } else {
-            array.push(result)
-            // let history = useHistory();
-            history.push("/activities");
+            history.push("/myRoutines");
+            window.location.reload(true);
             swal({
                 title: "Success!",
                 text: "You created a new routine!",
                 icon: "success",
               });
             }
-
         } catch(error) {
             console.error(error);
         }
@@ -90,8 +52,22 @@ const MyRoutines = (props) => {
     const handleDeleteRoutine = async (routineId) => {
         try {
             const result = await deleteRoutine(routineId)
-            // console.log('myRoutines.id', myRoutines.id)
-            // console.log('resultDelete', result)
+            if (result.error) {
+                swal({
+                    title: "Oh No!",
+                    text: "Something went wrong when deleting the routine",
+                    icon: "'error'",
+                    button: "Oh la la!",
+                  });
+            } else {
+            history.push("/myRoutines");
+            window.location.reload(true);
+            swal({
+                title: "Success!",
+                text: "You successfully deleted your routine!",
+                icon: "success",
+              });
+            }
 
         } catch(error) {
             console.error(error)
@@ -100,7 +76,23 @@ const MyRoutines = (props) => {
 
     const handledeleteRoutineActivity = async (routineActivityId) => {
         try {
-
+            const result = await deleteRoutineActivity(routineActivityId)
+            if (result.error) {
+                swal({
+                    title: "Oh No!",
+                    text: "Something went wrong when deleting the routine activity",
+                    icon: "'error'",
+                    button: "Oh la la!",
+                  });
+            } else {
+            history.push("/myRoutines");
+            window.location.reload(true);
+            swal({
+                title: "Success!",
+                text: "You successfully deleted your routine activity!",
+                icon: "success",
+              });
+            }
         } catch(error) {
             console.error(error)
         }
@@ -108,35 +100,77 @@ const MyRoutines = (props) => {
 
     const handleEditRoutine = async (routineId, name, goal) => {
         try {
+            event.preventDefault();
             const result = await editRoutine(routineId, name, goal)
-            console.log('result', result)
+            if (result.error) {
+                swal({
+                    title: "Oh No!",
+                    text: "Something went wrong when editing the routine",
+                    icon: "'error'",
+                    button: "Oh la la!",
+                  });
+            } else {
+            history.push("/myRoutines");
+            window.location.reload(true);
+            swal({
+                title: "Success!",
+                text: "You successfully edited your routine!",
+                icon: "success",
+              });
+            }
 
         } catch(error) {
             console.error(error)
         }
     }
 
-    const handleCreateActivity = async () => {
-        let array = []
-        // let history = useHistory();
+    const handleEditRoutineActivity = async (routineActivityId, count, duration) => {
         try {
-            // let history = useHistory();
             event.preventDefault();
-            // console.log('activity.name', activities)
-            const result = await createRoutineActivity(routineId,activityId, count, duration);
-            // console.log(result);
-            // console.log('result.name', result.name)
+            const result = await editRoutineActivity(routineActivityId, count, duration)
             if (result.error) {
                 swal({
-                    title: "Good job!",
-                    text: "An activity with this name already exists",
-                    icon: "success",
+                    title: "Oh No!",
+                    text: "Something went wrong when editing the routine",
+                    icon: "'error'",
                     button: "Oh la la!",
                   });
             } else {
-            array.push(result)
-            // let history = useHistory();
             history.push("/myRoutines");
+            window.location.reload(true);
+            swal({
+                title: "Success!",
+                text: "You successfully edited your routine!",
+                icon: "success",
+              });
+            }
+
+        } catch(error) {
+            console.error(error)
+        }
+    }
+
+
+    const handleSelect=(e)=>{
+        setActivityId(e.target.value);
+      }
+    
+
+
+    const handleCreateActivity = async (routineId, activityId) => {
+        try {
+            event.preventDefault();
+            const result = await createRoutineActivity(routineId,activityId, count, duration);
+            if (result.error) {
+                swal({
+                    title: "Oh No!",
+                    text: "An activity with this name already exists",
+                    icon: "'error'",
+                    button: "Oh la la!",
+                  });
+            } else {
+            history.push("/myRoutines");
+            window.location.reload(true);
             swal({
                 title: "Success!",
                 text: "You created a new activity!",
@@ -147,52 +181,88 @@ const MyRoutines = (props) => {
         } catch(error) {
             console.error(error);
         }
-
     }
     
-        // console.log('myInfo', myInfo)
-        // setMyInfo(myInfo)
-        // fetchRoutinesByUser(myInfo.username).then(setMyRoutines)
-        // console.log('routines', myRoutines);
-
-
     useEffect( () => {
-    // fetchRoutinesByUser(userData.username).then(response => setMyRoutines(response)).catch(error => console.log(error))
-    fetchRoutinesByUser('petitpied').then(setMyRoutines)
-    console.log('myRoutines', myRoutines)
-    },[])
+        if (userData.username) {
+            fetchRoutinesByUser(userData.username).then(response => setMyRoutines(response)).catch(error => console.log(error))
+        }
+        if (allActivities.length === 0) {
+            fetchActivities().then(response => setAllActivities(response)).catch(error => console.log(error))
+        }
+    },[userData])
 
     return (<>
 
-    <button type="button" className="btn btn-primary btn-lg btn-block" onClick={ setIsActive}>Create Routine</button>
+    <button type="button" className="btn btn-primary btn-lg btn-block" onClick={setIsActive}>Create Routine</button>
 
-    { isActive ? 
-        <form className="activityForm">
-            <div className="form-group">
-            <label >Name</label>
-            <input type="text" className="form-control" value={name} onChange={(e) => {setName(e.target.value)}}></input>
+        { isActive ? 
+            <div className="container">
+            <form className="activityForm">
+                <div className="form-group">
+                    <label >Name</label>
+                    <input type="text" className="form-control" value={name} onChange={(e) => {setName(e.target.value)}}/>
+                </div>
+                <div className="form-group">
+                    <label >Goal</label>
+                    <input type="text" className="form-control" value={goal} onChange={(e) => {setGoal(e.target.value)}}/>
+                </div>
+                <div className="form-check">
+                    <input className="form-check-input" type="checkbox" value={isPublic} onClick={() => setIsPublic(true)}/>
+                    <label className="form-check-label">
+                        Is Public
+                    </label>
+                </div>
+                <div>
+                <button type="submit" className="btn btn-primary" onClick={ handleCreateRoutine}>Submit</button>
+                </div>
+            </form>
             </div>
-            <div className="form-group">
-            <label >Description</label>
-            <input type="text" className="form-control" value={goal} onChange={(e) => {setGoal(e.target.value)}}></input>
-            </div>
-            <div className="form-check">
-                <input className="form-check-input" type="checkbox" value={isPublic} onClick={() => setIsPublic(true)}></input>
-                <label className="form-check-label" for="defaultCheck1">
-                    Is Public
-                </label>
-            </div>
+            : " "
+        }
 
-            <div>
-            <button type="submit" className="btn btn-primary" onClick={ handleCreateRoutine}>Submit</button>
+        { isEditActive ? 
+            <div className="container">
+                <form className="activityForm" style={{ marginLeft: "5em", marginRight: "5em", lineHeight:1}}>
+                    <div className="form-group">
+                        <h3>Update the Name and Goal for the routine</h3>
+                            <label >Name</label>
+                            <input type="text" className="form-control" placeholder={name} value={name} onChange={(e) => {setName(e.target.value)}}/>
+                    </div>
+                    <div className="form-group">
+                            <label >Goal</label>
+                            <input type="text" className="form-control" placeholder={goal} value={goal} onChange={(e) => {setGoal(e.target.value)}}/>
+                    </div>
+                    <div>
+                            <button type="submit" className="btn btn-primary" onClick={() => handleEditRoutine(routineId, name, goal)}>Submit</button>
+                    </div>
+                </form>
             </div>
-        </form>
-         : " "
-    }
+                : " "
+            }
+        { updateRoutineActivity ?
+            <div className="container">
+                <form className="activityForm">
+                    <div className="form-group">
+                        <h3>Update the Count and Duration for the activity {routineActivityName} </h3>
+                            <label >Count</label>
+                            <input type="text" className="form-control" placeholder={count} value={count} onChange={(e) => {setCount(e.target.value)}}/>
+                    </div>
+                    <div className="form-group">
+                            <label >Duration</label>
+                            <input type="text" className="form-control" placeholder={duration} value={duration} onChange={(e) => {setDuration(e.target.value)}}/>
+                    </div>
+                    <div>
+                            <button type="submit" className="btn btn-primary" onClick={() => handleEditRoutineActivity(routineActivityId, count, duration)}>Submit</button>
+                    </div>
+                </form>
+            </div>
+                : " "
+            }
 
-    <div> 
+    <div class="container"> <h1 class="mb-0">My Routines</h1>
         { myRoutines && myRoutines.map(({id, creatorId, isPublic, name, goal, creatorName, activities}) => 
-            <div key={id}
+            <div key={id} 
                 className="row">
                 <div className="col-sm-6">
                     <div className="card">
@@ -200,116 +270,75 @@ const MyRoutines = (props) => {
                             <h5 className="card-title">{name}</h5>
                             <p className="card-text">{goal}</p>
                             <p className="card-text">By: {creatorName}</p>
-                            <p className="card-text">{isPublic}</p>
-                            <p className="card-text">Activities:{activities}</p>
                             <div>
-                            <a href="#" className="btn btn-danger" onClick={() => handleDeleteRoutine(id)} >Delete</a>
+                            <button className="btn btn-danger" onClick={() => handleDeleteRoutine(id)} >Delete</button>
                             </div>
                             <div>
-                            <a href="#" className="btn btn-secondary" onClick={setEditIsActive}>Edit</a>
+                            <button id={id} className="btn btn-secondary" onClick={() => 
+                            {
+                            setEditIsActive(true)
+                            setName(name)
+                            setGoal(goal)
+                            setRoutineId(id)
+                            }
+                            }>Edit</button>
                             </div>
-                            { isEditActive ? 
-                                    <form className="activityForm">
-                                    <div className="form-group">
-                                    <label >Name</label>
-                                    <input type="text" className="form-control" value={name} onChange={(e) => {setName(e.target.value)}}>{name}</input>
-                                    </div>
-                                    <div className="form-group">
-                                    <label >Description</label>
-                                    <input type="text" className="form-control" value={goal} onChange={(e) => {setGoal(e.target.value)}}>{goal}</input>
-                                    </div>
-                                    <div className="form-check">
-                                    </div>
-                                    <div>
-                                    <button type="submit" className="btn btn-primary" onClick={ handleCreateRoutine}>Submit</button>
-                                    </div>
-                                </form>
-                            : '' }
                             <div>
-                            <button type="button" className="btn btn-primary" onClick={() => setActivityIsActive(true)}>Add Activity</button>
+                            <button id={id} type="button" className="btn btn-primary" onClick={() => { setActivityIsActive(true)
+                            setRoutineId(id)
+                            }}>Add Activity</button>
                             </div>
                         
-                            { activities.map(({id, routineActivityId, name, description, count, duration}) => {
-              return<div key={routineActivityId} className="card">
-                    <div className="card-body">
-                        <h4>Activity</h4>
-                        <h5 className="card-title">{name}</h5>
-                        <p className="card-text">{description}</p>
-                        <p className="card-text">Count: {count}</p>
-                        <p className="card-text">Duration: {duration} min</p>
-                        <a href="#" className="btn btn-danger" onClick={() => handledeleteRoutineActivity(id)}>Delete</a>
-                    </div>
-                </div>
-          })}
-              { activityIsActive ? 
-        <form className="activityForm">
-        <div className="btn-group">
-  {/* <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Available Activities
-  </button>
-  {dropDown ?  */}
-    {/* // <div className="dropdown-menu show" >
-    // <a className="dropdown-item" href="#">Action</a>
-    // <a className="dropdown-item" href="#">Another action</a>
-    // <a className="dropdown-item" href="#">Something else here</a>
-    // <div className="dropdown-divider"></div>
-    // <a className="dropdown-item" href="#">Separated link</a>
-//     <div className="dropdown">
-//   <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={setDropdown(!isDropdownOpen)}>
-//     Dropdown button
-//   </button>
-//   <div className={classnames('dropdown-menu bg-dark dropdown-userdata', {'show': isDropdownOpen})}>
-//     <a className="dropdown-item" href="#">Action</a>
-//     <a className="dropdown-item" href="#">Another action</a>
-//     <a className="dropdown-item" href="#">Something else here</a>
-//   </div>
-// </div>
-//   </div>  */}
-{/* <Dropdown>
-  <Dropdown.Toggle variant="success" id="dropdown-basic">
-    Dropdown Button
-  </Dropdown.Toggle>
-{}
-  <Dropdown.Menu>{
-      allActivities.map(activity => (
-              <Dropdown.Item key={activity.id} value={activity.id}>{activity.name}
-              </Dropdown.Item>
-      ))}
-
-
-  </Dropdown.Menu>
-</Dropdown> */}
-  {/* : ''
-  } */}
-  {/* {activities.map(({id, routineActivityId, name, description, count, duration}))} */}
-
-</div>
-            <div className="form-group">
-            <label >Name</label>
-            <input type="email" className="form-control" value={activityName} onChange={(e) => {setActivityName(e.target.value)}}></input>
-            </div>
-            <div className="form-group">
-            <label >Description</label>
-            <input type="email" className="form-control" value={activityDescription} onChange={(e) => {setActivityDescription(e.target.value)}}></input>
-            <label >Count</label>
-            <input type="email" className="form-control" value={count} onChange={(e) => {setCount(e.target.value)}}></input>
-            <label >Duration</label>
-            <input type="email" className="form-control" value={duration} onChange={(e) => {setDuration(e.target.value)}}></input>
-            <div>
-                <button type="submit" className="btn btn-primary" onClick={handleCreateActivity}>Submit</button>
-            </div>
-
-            </div>
-        </form>
-         : " "
-    }
+                            { activities.map(({id, routineActivityId, name, description, count, duration}) => <div key={id} className="card">
+                                        <div className="card-body">
+                                            <h4>Activity</h4>
+                                            <h5 className="card-title">{name}</h5>
+                                            <p className="card-text">{description}</p>
+                                            <p className="card-text">Count: {count}</p>
+                                            <p className="card-text">Duration: {duration} min</p>
+                                            <a href="#" className="btn btn-danger" onClick={() => handledeleteRoutineActivity(routineActivityId)}>Delete</a>
+                                            <a href="#" className="btn btn-secondary" onClick={() => {
+                                                setUpdateRoutineActivity(routineActivityId)
+                                                setRoutineActivityId(routineActivityId)
+                                                setRoutineActivityName(name)
+                                                setCount(count)
+                                                setDuration(duration)
+                                            }
+                                            }>Edit</a>
+                                        </div>
+                                    </div>
+                            )}
+                            { activityIsActive && routineId == id ? 
+                                <form className="activityForm">
+                                        <select onChange={ handleSelect }>{
+                                            allActivities.map(activity => (
+                                                    <option key={ activity.id } value={ activity.id }>
+                                                    { activity.name }
+                                                    </option>
+                                                    ))
+                                                    }</select>
+                        
+                                        <div className="form-group">
+    
+                                            <label >Count</label>
+                                                <input type="text" className="form-control" value={count} onChange={(e) => {setCount(e.target.value)}}></input>
+                                            <label >Duration</label>
+                                                <input type="email" className="form-control" value={duration} onChange={(e) => {setDuration(e.target.value)}}></input>
+                                            <div>
+                                                <button type="submit" className="btn btn-primary" onClick={() => handleCreateActivity(routineId, activityId)}>Submit</button>
+                                            </div>
+                                        </div>
+                                </form>
+                            : " "
+                            }
                         </div>
                     </div>
                 </div>
             </div>
 )}
-    
-    </div></>)
+</div>
+
+</>)
 };
 
 export default MyRoutines;

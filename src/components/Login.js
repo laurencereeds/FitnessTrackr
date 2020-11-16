@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import swal from 'sweetalert';
 import { login, setToken } from '../api';
 
@@ -9,12 +9,9 @@ const Login = () => {
     const handleLogin = async (event) => {
         try {
             event.preventDefault();
-            console.log('username', username);
             const result = await login(username, password);
-            console.log('result', result);
             if (result) {
                 setToken(result.token);
-                console.log('test');
                 if (result.user && result.user.username) {
                     setUsername(result.user.username);
                     location.href = "/home/";
@@ -32,13 +29,12 @@ const Login = () => {
                     button: "Try again",
                   });
             }
-
             } catch(error) {
             console.error(error)
         } 
 }
     return (
-  <div>
+  <div className="form-signin">
       <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Username</label>

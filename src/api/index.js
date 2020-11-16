@@ -22,7 +22,6 @@ export function makeHeaders() {
 }
 
 export async function register(username, password) {
-    console.log('username', username, 'password', password)
     try {
         const response = await fetch(`${API_URL}/api/users/register`, {
           method: "POST",
@@ -33,7 +32,6 @@ export async function register(username, password) {
             })
           })
           const responseObj = await response.json();
-          console.log('responseObjSignUp', responseObj)
       
           if (responseObj && responseObj.token) {
           setToken(responseObj.token); 
@@ -55,8 +53,6 @@ export async function login(username, password) {
             })
         })
         const responseObj = await response.json();
-        console.log('responseObjSignIn', responseObj) 
-        console.log('signInToken', responseObj.token)
         if (responseObj && responseObj.token) {
         setToken(responseObj.token);
         }
@@ -73,7 +69,6 @@ export async function fetchUserData() {
             headers: makeHeaders()
         })
         const responseObj = await response.json();
-        console.log('responseObjUserData', responseObj)
         return responseObj;
     } catch(error) {
         console.error(error)
@@ -87,7 +82,6 @@ export async function fetchRoutinesByUser(username) {
             headers: makeHeaders()
         })
         const responseObj = await response.json();
-        console.log('responseObjfetchRoutinesByUser', responseObj)
         return responseObj;
     } catch(error) {
         console.error(error)
@@ -101,7 +95,6 @@ export async function fetchActivities() {
             headers: makeHeaders()
         })
         const responseObj = await response.json();
-        console.log('responseObjActivities', responseObj)
         return responseObj
     } catch(error) {
       console.error(error)
@@ -119,7 +112,6 @@ export async function createActivity(name, description) {
             })
         })
         const responseObj = await response.json();
-        console.log('responseObjCreateActivity', responseObj)
         return responseObj;
     } catch(error) {
         console.error(error)
@@ -137,21 +129,19 @@ export async function editActivity(activityId, name, description) {
             })
         })
         const responseObj = await response.json();
-        console.log('responseObjeditActivity', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
 }
 
 export async function fetchRoutineActivities(routineId) {
-    console.log('routineId', routineId)
     try {
         const response = await fetch(`${API_URL}/api/activities/${routineId}/routines`, {
             method: 'GET',
             headers: makeHeaders()
         })
         const responseObj = await response.json();
-        console.log('responseObjRoutineActivities', responseObj)
         return responseObj;
     } catch(error) {
         console.error(error)
@@ -165,7 +155,6 @@ export async function fetchRoutines() {
             headers: makeHeaders()
         })
         const responseObj = await response.json();
-        console.log('responseObjRoutines', responseObj)
         return responseObj
     } catch(error) {
         console.error(error)
@@ -184,7 +173,7 @@ export async function createRoutine(name, goal, isPublic) {
             })
         })
         const responseObj = await response.json();
-        console.log('responseObjCreateRoutine', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -201,7 +190,7 @@ export async function editRoutine(routineId, name, goal) {
             })
         })
         const responseObj = await response.json();
-        console.log('responseObjEditRoutine', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -214,7 +203,7 @@ export async function deleteRoutine(routineId) {
             headers: makeHeaders()
         })
         const responseObj = await response.json();
-        console.log('responseObjDelete', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -232,7 +221,7 @@ export async function createRoutineActivity(routineId, activityId, count, durati
             })
         })
         const responseObj = await response.json();
-        console.log('responseObjCreateRoutineActivity', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -249,7 +238,7 @@ export async function editRoutineActivity(routineActivityId, count, duration) {
             })
         })
         const responseObj = await response.json();
-        console.log('responseObjEditRoutineActivity', responseObj)
+        return responseObj;
     } catch(error) {
         console.error(error)
     }
@@ -262,7 +251,6 @@ export async function deleteRoutineActivity(routineActivityId) {
             headers: makeHeaders()
         })
         const responseObj = await response.json();
-        console.log('responseObjDeleteRoutineActivity', responseObj)
         return responseObj;
     } catch(error) {
         console.error(error)
