@@ -6,10 +6,30 @@ const Register = () => {
     const [password, setPassword] = useState('');
 
     const handleRegister = async (event) => {
+                event.preventDefault();
+        if (password.length < 8 ){
+            setPassword('')
+            swal({
+                title: "Oh la la!",
+                text: "Password needs to be at least 8 characters long. Please try again with a different username and password combinaison",
+                icon: "error",
+                button: "Try again",
+                }); 
+            return
+        }
         try {
             event.preventDefault();
             const result = await register(username, password);
-            if (result) {
+            if (result.error) {
+                setUsername('')
+                setPassword('')
+                swal({
+                    title: "Oh la la!",
+                    text: "Username already taken please try again",
+                    icon: "error",
+                    button: "Try again",
+                  });
+            } else {
                 setToken(result.token);
                 if (result.user && result.user.username) {
                     setUsername(result.user.username);
@@ -20,13 +40,6 @@ const Register = () => {
                         icon: "success",
                       });
                 }
-            } else {
-                swal({
-                    title: "Oh la la!",
-                    text: "Please try again with a different username and password combinaison",
-                    icon: "error",
-                    button: "Try again",
-                  });
             }
             } catch(error) {
             console.error(error)
@@ -47,6 +60,6 @@ const Register = () => {
       </form>
   </div>
         )
-    }
+}
 
 export default Register;

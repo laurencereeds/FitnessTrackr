@@ -1,7 +1,4 @@
-import React from "react";
-import axios from "axios";
-
-export const API_URL = 'http://fitnesstrac-kr.herokuapp.com';
+export const API_URL = 'https://fitnesstrac-kr.herokuapp.com';
 
 
 export function setToken(token) {

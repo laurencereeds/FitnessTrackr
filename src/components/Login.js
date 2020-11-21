@@ -10,7 +10,16 @@ const Login = () => {
         try {
             event.preventDefault();
             const result = await login(username, password);
-            if (result) {
+            if (result.error) {
+                setUsername('')
+                setPassword('')
+                swal({
+                    title: "Oh la la!",
+                    text: "Username or password is incorrect. Please try again",
+                    icon: "error",
+                    button: "Try again",
+                  });
+            } else {
                 setToken(result.token);
                 if (result.user && result.user.username) {
                     setUsername(result.user.username);
@@ -21,13 +30,6 @@ const Login = () => {
                         icon: "success",
                       });
                 }
-            } else {
-                swal({
-                    title: "Oh la la!",
-                    text: "Username or password is incorrect",
-                    icon: "error",
-                    button: "Try again",
-                  });
             }
             } catch(error) {
             console.error(error)
